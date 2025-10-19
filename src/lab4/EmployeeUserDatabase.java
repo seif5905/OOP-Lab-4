@@ -16,26 +16,16 @@ import java.util.Scanner;
  *
  * @author msi
  */
-public class EmployeeUserDatabase {
-  private ArrayList<EmployeeUser> records = new ArrayList<>();
-  private String filename;
+public class EmployeeUserDatabase extends DataBase{
+ 
+    
+    
     public EmployeeUserDatabase(String filename) {
-        this.filename = filename;
+        super(filename);
     }
 
-  public void readFromFile()throws FileNotFoundException
-  {
-      File f=new File(filename);
-      Scanner s=new Scanner(f);
-      while(s.hasNextLine())
-      {
-          String Line =s.nextLine();
-         EmployeeUser em=creatRecordFrom(Line);
-         records.add(em);
-      }
-      s.close();
-  }
-  public EmployeeUser creatRecordFrom(String Line)
+    
+  public EmployeeUser createRecordFrom(String Line)
   {
        String[] token=Line.split(",");
           String Id,name,email,address,phonenumber;
@@ -47,54 +37,5 @@ public class EmployeeUserDatabase {
           EmployeeUser em=new EmployeeUser(Id, name, email, address, phonenumber);
           return em;
       
-  }
-  public ArrayList<EmployeeUser> returnAllRecords()
-  {
-      return records;
-  }
-  public boolean contains(String key)
-  {
-      for(int i=0;i<records.size();i++)
-      {
-          if(records.get(i).GetSearchKey().equals(key))
-              return true;
-      }
-      return  false;
-  }
-  public EmployeeUser getRecord(String key)
-  {
-      for(int i=0;i<records.size();i++)
-      {
-          EmployeeUser em=records.get(i);
-          if(records.contains(key))
-              return em;
-      }
-      return null;
-  }
-  public void insertRecord(EmployeeUser record) 
-  {
-      records.add(record);
-  }
-  public void deleteRecord(String key)
-  {
-      for(int i=0;i<records.size();i++)
-      {
-          EmployeeUser em=records.get(i);
-          if(records.contains(key))
-              records.remove(i);
-      }
-  }
-  public void saveToFile() throws FileNotFoundException
-  {
-      
-          PrintWriter w=new PrintWriter(filename);
-          for(int i=0;i<records.size();i++){
-              w.println(records.get(i).lineRepresentation());
-              if(i<records.size()-1)
-                  w.write("\n");
-          }
-          w.close();
-      } 
-  }
-  
+  }}
 
