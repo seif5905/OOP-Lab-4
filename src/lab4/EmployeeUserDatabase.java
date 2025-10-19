@@ -19,10 +19,10 @@ import java.util.Scanner;
 public class EmployeeUserDatabase {
   private ArrayList<EmployeeUser> records = new ArrayList<>();
   private String filename;
-
     public EmployeeUserDatabase(String filename) {
         this.filename = filename;
     }
+
   public void readFromFile()throws FileNotFoundException
   {
       File f=new File(filename);
