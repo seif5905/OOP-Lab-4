@@ -124,7 +124,7 @@ public class EmployeeRole {
     
     public boolean applyPayment(String customerSSN, LocalDate purchaseDate)
     {
-    list<customerProduct>records=customerProductDatabase.getAllRecords();
+    list<customerProduct>records=customerProductDatabase.returnAllRecords();
     for (int i=0;i<records.size();i++){
         customerProduct cp = records.get(i);
         if(cp.getCustomerId().equals(customerSSN)&&cp.getPurchaseDate().equals(purchaseDate)){
