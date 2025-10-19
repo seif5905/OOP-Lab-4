@@ -8,7 +8,7 @@ package lab4;
  *
  * @author msi
  */
-public class EmployeeUser {
+public class EmployeeUser implements Record {
    private String employeeId;
    private String Name;
    private String Email;
@@ -22,11 +22,13 @@ public class EmployeeUser {
         this.Address = Address;
         this.PhoneNumber = PhoneNumber;
     }
+    @Override
    public String lineRepresentation()
    {
       String Line=employeeId +","+ Name +","+ Email +","+ Address +","+ PhoneNumber;
       return Line;
    }
+   @Override
    public String GetSearchKey()
    {  
        return employeeId;
