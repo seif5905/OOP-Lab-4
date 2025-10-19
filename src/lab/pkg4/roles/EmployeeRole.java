@@ -14,22 +14,22 @@ import java.time.temporal.ChronoUnit;
  */
 public class EmployeeRole {
 
-    private productDatabase productsDatabase;
+    private ProductDatabase productsDatabase;
     private CustomerProductDatabase customerProductDatabase;
 
     public EmployeeRole() {
-        this.productsDatabase = new productDatabase("Products.txt");
+        this.productsDatabase = new ProductDatabase("Products.txt");
         this.customerProductDatabase = new CustomerProductDatabase("CustomerProduct.txt");
         productsDatabase.readFromFile();
         customerProductDatabase.readFromFile();
     }
 
     public ProductDatabase getProductsdatabase() {
-        return productsdatabase;
+        return productsDatabase;
     }
 
     public void setProductsdatabase(ProductDatabase productsdatabase) {
-        this.productsDtabase = productsdatabase;
+        this.productsDatabase = productsdatabase;
     }
 
     public CustomerProductDatabase getCustomerProductDatabase() {
@@ -40,33 +40,33 @@ public class EmployeeRole {
         this.customerProductDatabase = customerProductDatabase;
     }
 
-    public void addProduct(String producID, String productName, String manufacturerName, String supplierName, int quantity, float price) {
+    public void addProduct(String producID, String productName, String manufacturerName, String supplierName, int quantity, double price) {
         if (productsDatabase.contains(producID)) {
             System.out.println("Id already exists");
             return;
         } else {
-            product p = new product(producID, productName, manufacturerName, supplierName, quantity, price);
+            Product p = new Product(producID, productName, manufacturerName, supplierName, quantity, price);
             productsDatabase.insertRecord(p);
-            productsDatabase.saveToFile();
+            //productsDatabase.saveToFile();
             System.out.println("productName " + productName + " added successfully");
         }
     }
 
-    public product[] getListOfproducts() {
-        productsDatabase.readFromFile();
-        ArrayList<product> list = productsDatabase.returnAllRecords();
-        product[] products = new product[list.size()];
+    public Product[] getListOfProducts() {
+        //productsDatabase.readFromFile();
+        ArrayList<Product> list = productsDatabase.returnAllRecords();
+        Product[] products = new Product[list.size()];
         for (int i = 0; i < list.size(); i++) {
             products[i] = list.get(i);
         }
         return products;
     }
 
-    public customerProduct[] getListOfpurchasingOperations() {
-        customerProductDatabase.readFromFile();
-        customerProductDatabase.returnAllRecords();
-        ArrayList<CustomrProduct> list = customerProductDatabase.returnAllRecords();
-        customerProduct[] customerProducts = new customerProduct[list.size()];
+    public CustomerProduct[] getListOfPurchasingOperations() {
+        //customerProductDatabase.readFromFile();
+        //customerProductDatabase.returnAllRecords();
+        ArrayList<CustomerProduct> list = customerProductDatabase.returnAllRecords();
+        CustomerProduct[] customerProducts = new CustomerProduct[list.size()];
         for (int i = 0; i < list.size(); i++) {
             customerProducts[i] = list.get(i);
         }
@@ -83,17 +83,17 @@ public class EmployeeRole {
             System.out.print("product not found");
             return false;
         } else {
-            product p = productsDatabase.getRecord(productID);
+            Product p = productsDatabase.getRecord(productID);
             if (p.getQuantity() == 0) {
                 System.out.println("product out of stock");
                 return false;
             } else {
                 p.setQuantity(p.getQuantity() - 1);
 
-                customerProduct cp = new customerProduct(customerSSN, productID, purchaseDate, false);
+                CustomerProduct cp = new CustomerProduct(customerSSN, productID, purchaseDate);
                 customerProductDatabase.insertRecord(cp);
-                productsDatabase.saveToFile();
-                customerProductDatabase.saveToFile();
+                //productsDatabase.saveToFile();
+                //customerProductDatabase.saveToFile();
                 return true;
             }
 
@@ -114,30 +114,30 @@ public class EmployeeRole {
             System.out.println("more than 14 days");
             return -1;
         }
-        product p = productsDatabase.getRecord(productID);
+        Product p = productsDatabase.getRecord(productID);
         p.setQuantity(p.getQuantity() + 1);
-        customerProductDatabase.deleteRecord(customerSSN, productID, purchaseDate);
-        productsDatabase.saveToFile();
-        customerProductDatabase.saveToFile();
+        customerProductDatabase.deleteRecord(customerSSN + "," + productID + "," + purchaseDate.getDayOfMonth() + "-"
+                + purchaseDate.getMonthValue() + "-" + purchaseDate.getYear());
+        //productsDatabase.saveToFile();
+        //customerProductDatabase.saveToFile();
         return p.getPrice();
     }
-    
-    public boolean applyPayment(String customerSSN, LocalDate purchaseDate)
-    {
-    list<customerProduct>records=customerProductDatabase.returnAllRecords();
-    for (int i=0;i<records.size();i++){
-        customerProduct cp = records.get(i);
-        if(cp.getCustomerId().equals(customerSSN)&&cp.getPurchaseDate().equals(purchaseDate)){
-            if(cp.isPaid()){
-                System.out.println("purchase paid");
-                return false;
+
+    public boolean applyPayment(String customerSSN, LocalDate purchaseDate) {
+        List<CustomerProduct> records = customerProductDatabase.returnAllRecords();
+        for (int i = 0; i < records.size(); i++) {
+            CustomerProduct cp = records.get(i);
+            if (cp.getCustomerSSN().equals(customerSSN) && cp.getPurchaseDate().equals(purchaseDate)) {
+                if (cp.isPaid()) {
+                    System.out.println("purchase paid");
+                    return false;
+                }
+                cp.setPaid(true);
+                //customerProductDatabase.saveToFile();
+                return true;
             }
-            cp.setPaid(true);
-            customerProductDatabase.saveToFile();
-            return true;
         }
+        return false;
     }
-    return false;
-    }
-            
+
 }
